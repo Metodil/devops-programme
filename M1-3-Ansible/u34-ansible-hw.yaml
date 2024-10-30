@@ -1,0 +1,65 @@
+- name: HW Ansible Build, Push, and Run Docker Image
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    app_folder: "/home/meto/work/Upskill_34_DevOps/tests/ansible-docker/application"
+    git_repo: "Metodil/devops-programme"
+    image_name: "my-hello-world"
+    image_tag: "v0."
+    registry_url: "metodil"
+    container_name: "my-hello-world-hw"
+    listen_port:
+      - "5000:3000"
+
+  tasks:
+    - name: Get version number
+      local_action: shell file=$((`cat ./M1-3-Ansible/ver_num` + 1)); echo $file | tee ./M1-3-Ansible/ver_num
+      register: ver_num
+
+    - name: Print Version number
+      debug:
+        var: "{{ image_tag }}{{ ver_num.stdout }}"
+
+    - name: Create application directory
+      file:
+        path: "{{ app_folder }}"
+        state: directory
+        mode: 0755
+
+    - name: Get latest git version
+      git:
+        repo: git@github.com:{{ git_repo }}
+        dest: "{{ app_folder }}"
+        version: main
+        force: true
+
+    - name: Build Docker image
+      docker_image:
+        name: "{{ registry_url }}/{{ image_name }}"
+        source: build
+        build:
+          path: "{{ app_folder }}"
+          args:
+            log_volume: /var/log/{{ image_name }}
+        tag: "{{ image_tag }}{{ ver_num.stdout }}"
+        state: present
+
+    - name: Push Docker image to registry
+      docker_image:
+        name: "{{ registry_url }}/{{ image_name }}"
+        tag: "{{ image_tag }}{{ ver_num.stdout }}"
+        push: true
+        source: local
+
+    - name: Stop container
+      docker_container:
+        state: absent
+        name: "{{ container_name }}"
+
+    - name: Run Docker container
+      docker_container:
+        name: "{{ container_name }}"
+        image: "{{ registry_url }}/{{ image_name }}:{{ image_tag }}{{ ver_num.stdout }}"
+        state: started
+        ports: "{{ listen_port }}"
