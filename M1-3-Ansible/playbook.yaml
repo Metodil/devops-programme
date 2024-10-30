@@ -1,0 +1,28 @@
+- hosts: localhost
+  gather_facts: false
+  vars:
+   folder_path: "/tmp/application"
+  tasks:
+    - name: Create application directory
+      file:
+        path: "{{ folder_path }}"
+        state: directory
+        mode: 0755
+    - name: Get latest git version
+      git:
+        repo: git@github.com:Metodil/devops-programme
+        dest: "{{ folder_path }}"
+        version: main
+        force: yes
+    - name: Install dependencies
+      pip:
+       requirements: "{{ folder_path }}/requirements.txt"
+       virtualenv: "{{ folder_path }}/venv"
+    - name: Run unit tests
+      ansible.legacy.command: python3 -m unittest app_test.py
+      args:
+        chdir: "{{ folder_path }}/app"
+      register: test_results
+    - name: Print test test_results
+      debug:
+        var=test_results.stderr
