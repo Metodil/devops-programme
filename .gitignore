@@ -1,3 +1,6 @@
+# add my ansible vault paswword key
+/M1-3-Ansible/pass-keys
+.ansible_hw_pass_key.txt
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
