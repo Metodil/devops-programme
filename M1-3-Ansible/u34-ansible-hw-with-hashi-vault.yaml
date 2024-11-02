@@ -1,0 +1,91 @@
+- name: HW Ansible Build, Push, and Run Docker Image
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    vault_addr: "https://127.0.0.1:8200"
+    vault_token: "{{ lookup('env', 'VAULT_TOKEN_READONLY') }}"
+    # Assuming VAULT_TOKEN_READONLY created with read only policy just for read
+    app_folder: "/home/meto/work/Upskill_34_DevOps/tests/ansible-docker/application"
+    git_repo: "Metodil/devops-programme"
+    image_name: "my-hello-world"
+    image_tag: "v0."
+    container_name: "my-hello-world-hw"
+    listen_port:
+      - "5000:3000"
+
+  tasks:
+    - name: Retrieve credentials from Hashi Vault
+      community.hashi_vault.vault_read:
+        url: "{{ vault_addr }}"
+        auth_method: token
+        path: "secret/data/devops-programme"
+        token: "{{ vault_token }}"
+      register: vault_creds
+
+    - name: Debug retrieved credentials
+      debug:
+#        var: vault_creds
+        msg:
+          - "Username: {{ vault_creds.data.data.data.dockerhub_username }}"
+          - "Password: {{ vault_creds.data.data.data.dockerhub_password | password_hash('sha512', 'salt') }}"
+    - set_fact:
+        dockerhub_username: "{{ vault_creds.data.data.data.dockerhub_username }}"
+        dockerhub_password: "{{ vault_creds.data.data.data.dockerhub_password }}"
+
+    - name: Get version number
+      local_action: shell file=$((`cat ver_num` + 1)); echo $file | tee ver_num
+      register: ver_num
+
+    - name: Print Version number
+      debug:
+        var: "{{ image_tag }}{{ ver_num.stdout }}"
+
+    - name: Create application directory
+      file:
+        path: "{{ app_folder }}"
+        state: directory
+        mode: 0755
+
+    - name: Get latest git version
+      git:
+        repo: git@github.com:{{ git_repo }}
+        dest: "{{ app_folder }}"
+        version: main
+        force: true
+
+    - name: Build Docker image
+      docker_image:
+        name: "{{ dockerhub_username }}/{{ image_name }}"
+        source: build
+        build:
+          path: "{{ app_folder }}"
+          args:
+            log_volume: /var/log/{{ image_name }}
+        tag: "{{ image_tag }}{{ ver_num.stdout }}-hashi-vault"
+        state: present
+
+    - name: Log in to Docker Hub
+      docker_login:
+        username: "{{ dockerhub_username }}"
+        password: "{{ dockerhub_password }}"
+        registry: "https://index.docker.io/v1/"
+
+    - name: Push Docker image to registry
+      docker_image:
+        name: "{{ dockerhub_username }}/{{ image_name }}"
+        tag: "{{ image_tag }}{{ ver_num.stdout }}-hashi-vault"
+        push: true
+        source: local
+
+    - name: Stop container
+      docker_container:
+        state: absent
+        name: "{{ container_name }}"
+
+    - name: Run Docker container
+      docker_container:
+        name: "{{ container_name }}"
+        image: "{{ dockerhub_username }}/{{ image_name }}:{{ image_tag }}{{ ver_num.stdout }}-hashi-vault"
+        state: started
+        ports: "{{ listen_port }}"
