@@ -1,0 +1,5 @@
+---
+# defaults file for run-container
+image_name_r: "my-hello-world"
+container_name_r: "my-hello-world-hw"
+listen_port_r: 5000

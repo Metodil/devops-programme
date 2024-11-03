@@ -1,0 +1,74 @@
+- name: HW Ansible Build, Push, and Run Docker Image
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    vault_addr: "https://127.0.0.1:8200"
+    vault_token: "{{ lookup('env', 'VAULT_TOKEN_READONLY') }}"
+    # Assuming VAULT_TOKEN_READONLY created with read only policy just for read
+    app_folder: "/home/meto/work/Upskill_34_DevOps/tests/ansible-docker/application"
+    git_repo: "Metodil/devops-programme"
+    image_name: "my-hello-world"
+    image_tag: "v0."
+    container_name: "my-hello-world-hw"
+    listen_port:
+      - "5000:3000"
+
+  tasks:
+    - name: Using get-dockerhub-credentials role
+      import_role:
+        name: ./my-roles/get-dockerhub-credentials
+      vars:
+        vault_addr_r: "{{ vault_addr }}"
+        vault_token_r: "{{ vault_token }}"
+
+    - name: Get version number
+      local_action: shell file=$((`cat ver_num` + 1)); echo $file | tee ver_num
+      register: ver_num
+
+    - name: Print Version number
+      debug:
+        var: "{{ image_tag }}{{ ver_num.stdout }}"
+
+    - name: Create application directory
+      file:
+        path: "{{ app_folder }}"
+        state: directory
+        mode: 0755
+    - name: Get latest git version
+      git:
+        repo: git@github.com:{{ git_repo }}
+        dest: "{{ app_folder }}"
+        version: main
+        force: true
+
+    - name: Build Docker image
+      docker_image:
+        name: "{{ dockerhub_username }}/{{ image_name }}"
+        source: build
+        build:
+          path: "{{ app_folder }}"
+          args:
+            log_volume: /var/log/{{ image_name }}
+        tag: "{{ image_tag }}{{ ver_num.stdout }}-hashi-vault"
+        state: present
+
+    - name: Log in to Docker Hub
+      docker_login:
+        username: "{{ dockerhub_username }}"
+        password: "{{ dockerhub_password }}"
+        registry: "https://index.docker.io/v1/"
+
+    - name: Push Docker image to registry
+      docker_image:
+        name: "{{ dockerhub_username }}/{{ image_name }}"
+        tag: "{{ image_tag }}{{ ver_num.stdout }}-hashi-vault"
+        push: true
+        source: local
+    - name: Using run-container role
+      import_role:
+        name: ./my-roles/run-container
+      vars:
+        container_name_r: "{{ container_name }}"
+        image_name_r: "{{ dockerhub_username }}/{{ image_name }}:{{ image_tag }}{{ ver_num.stdout }}-hashi-vault"
+        listen_port_r: "{{ listen_port }}"

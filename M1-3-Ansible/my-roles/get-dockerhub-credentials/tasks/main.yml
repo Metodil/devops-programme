@@ -1,0 +1,18 @@
+---
+# tasks file for get-dockerhub-credentials
+- name: Retrieve credentials from Hashi Vault
+  community.hashi_vault.vault_read:
+    url: "{{ vault_addr_r }}"
+    auth_method: token
+    path: "secret/data/devops-programme"
+    token: "{{ vault_token_r }}"
+  register: vault_creds
+- name: Debug retrieved credentials
+  debug:
+#     var: vault_creds
+     msg:
+        - "Username: {{ vault_creds.data.data.data.dockerhub_username }}"
+        - "Password: {{ vault_creds.data.data.data.dockerhub_password | password_hash('sha512', 'salt') }}"
+- set_fact:
+    dockerhub_username: "{{ vault_creds.data.data.data.dockerhub_username }}"
+    dockerhub_password: "{{ vault_creds.data.data.data.dockerhub_password }}"

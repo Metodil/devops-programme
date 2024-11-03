@@ -1,0 +1,14 @@
+---
+# tasks file for run-container
+    - name: Stop container
+      docker_container:
+        state: absent
+        name: "{{ container_name_r }}"
+
+    - name: Run Docker container
+      docker_container:
+        name: "{{ container_name_r }}"
+        image: "{{ image_name_r }}"
+        state: started
+        ports: "{{ listen_port_r }}"
+
