@@ -17,14 +17,36 @@ jobs:
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
 
-  lint:
+  build:
     runs-on: ubuntu-latest
     needs: Explore-GitHub-Actions
     steps:
-      - run: echo "Code Lint"
+      - run: echo "Code build"
+
+  lint:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - run: echo "test lint"
 
   unitest:
     runs-on: ubuntu-latest
     needs: lint
     steps:
-      - run: echo "Lint is ok and then run test"
+      - run: echo "test unitest"
+
+  configure-secrets:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Retrieve secrets
+        env:
+          super_secret: ${{ secrets.SUPERSECRET}}
+        run:
+          echo "$super_secret"
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [lint, unitest, configure-secrets]
+    steps:
+      - run: echo "Deploy"
