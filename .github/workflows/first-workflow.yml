@@ -31,7 +31,7 @@ jobs:
 
   unitest:
     runs-on: ubuntu-latest
-    needs: lint
+    needs: buils
     steps:
       - run: echo "test unitest"
 
