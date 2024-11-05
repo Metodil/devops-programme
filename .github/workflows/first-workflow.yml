@@ -43,8 +43,8 @@ jobs:
         env:
           name: first
           super_secret: ${{ secrets.SUPERSECRET }}
-        run:
-          echo "$super_secret"
+        run: |
+           echo "$super_secret"
 
   deploy:
     runs-on: ubuntu-latest
