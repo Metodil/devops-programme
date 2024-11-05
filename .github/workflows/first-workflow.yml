@@ -41,9 +41,20 @@ jobs:
     steps:
       - name: Retrieve secrets
         env:
-          super_secret: ${{ secrets.SUPERSECRET}}
+          super_secret: ${{ secrets.SUPERSECRET }}
         run:
           echo "$super_secret"
+
+  configure-env-vars:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Retrieve env vars
+        env:
+          env_var: ${{ env.VAR_FROM_ENV }}
+        run:
+          echo "$env_var"
+
 
   deploy:
     runs-on: ubuntu-latest
