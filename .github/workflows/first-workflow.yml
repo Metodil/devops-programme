@@ -44,6 +44,7 @@ jobs:
         env:
           super_secret: ${{ secrets.SUPERSECRET }}
           env_var: ${{ vars.VAR_FROM_ENV }}
+          repo_var: ${{ vars.MY_REPO_VAR}}
         run: |
            echo "$super_secret"
 
