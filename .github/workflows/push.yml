@@ -23,7 +23,6 @@ jobs:
         uses: github/codeql-action/analyze@v3
 
   trivy-test:
-    name: Test with trivy
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
