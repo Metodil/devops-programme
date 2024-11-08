@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   codeql:
-    name: Run CodeQL Analysis
+    name: CodeQL Analysis
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -22,7 +22,7 @@ jobs:
       - name: Run CodeQL Analysis
         uses: github/codeql-action/analyze@v3
 
-  trivy:
+  trivy-test:
     name: Test with trivy
     runs-on: ubuntu-latest
     steps:
@@ -54,7 +54,7 @@ jobs:
 #          vuln-type: 'os,library'
 #          severity: 'CRITICAL,HIGH'
 
-  lint:
+  lint-test:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
