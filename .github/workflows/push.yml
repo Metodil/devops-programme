@@ -3,6 +3,26 @@ run-name: ${{ github.actor }} run workflow  on ${{ github.event_name }} event in
 on: [push]
 
 jobs:
+
+  codeql:
+    name: Run CodeQL Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: 'python' # Specify the languages of your project
+      - name: Build code
+        # Add the necessary commands to build your code (e.g., for JavaScript or Python)
+        run: |
+          # Example build commands:
+          # npm install
+          # pip install -r requirements.txt
+      - name: Run CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
   lint:
     runs-on: ubuntu-latest
     steps:
