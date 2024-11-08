@@ -3,7 +3,6 @@ run-name: ${{ github.actor }} run workflow  on ${{ github.event_name }} event in
 on: [push]
 
 jobs:
-
   codeql:
     name: Run CodeQL Analysis
     runs-on: ubuntu-latest
@@ -22,13 +21,6 @@ jobs:
           # pip install -r requirements.txt
       - name: Run CodeQL Analysis
         uses: github/codeql-action/analyze@v3
-
-      - name: Run Trivy SAST Scan
-        uses: aquasecurity/trivy-action@v0.2.0
-        with:
-          scan-type: 'fs'
-          severity: 'HIGH,CRITICAL'
-          ignore-unfixed: true
 
   trivy:
     name: Test with trivy
