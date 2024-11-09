@@ -1,10 +1,14 @@
 name: u34 homework workflow
-run-name: ${{ github.actor }} run workflow  on ${{ github.event_name }} event in ${{ github.repository }} repo
+run-name: u34 homework workflow run on ${{ github.event_name }} event
 on:
   push:
     branches: [ first-step-workflow ]
-  pull_request:
-    branches: [ first-step-workflow ]
+    paths: ['app/**.py']
+#  pull_request:
+#    branches: [ first-step-workflow ]
+#  pull_request:
+#    branches: [ first-step-workflow ]
+#    paths: ['app/**.py']
 
 jobs:
   trivy-test:
