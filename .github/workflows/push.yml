@@ -1,6 +1,8 @@
 name: u34 push workflow
 run-name: ${{ github.actor }} run workflow  on ${{ github.event_name }} event in ${{ github.repository }} repo
-on: [push]
+on:
+  push:
+    branches: [ main ]
 
 jobs:
   codeql:
