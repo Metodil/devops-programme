@@ -6,6 +6,7 @@ on:
 #      - 'app/**'
 #      - 'Dockerfile'
 #      - 'requirements.txt'
+
 env:
   TEST_TAG: metodil/my-hello-app:test
   IMAGE_TAG: metodil/my-hello-app:latest
