@@ -1,12 +1,12 @@
 name: u34 homework workflow
 run-name: u34 homework workflow run on ${{ github.event_name }} event
 on:
-  push:
-#  pull_request:
-#    paths:
-#      - 'app/**'
-#      - 'Dockerfile'
-#      - 'requirements.txt'
+#  push:
+  pull_request:
+    paths:
+      - 'app/**'
+      - 'Dockerfile'
+      - 'requirements.txt'
 env:
   TEST_TAG: metodil/my-hello-app:test
   IMAGE_TAG: metodil/my-hello-app:latest
@@ -43,7 +43,7 @@ jobs:
         run: |
           pip install pytest pytest-cov
           cd app
-          python -m unittest app/app_test.py
+          python -m unittest app_test.py
 
 
 #  pylint-test:
