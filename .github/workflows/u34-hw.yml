@@ -10,7 +10,6 @@ on:
 env:
   TEST_TAG: metodil/my-hello-app:test
   IMAGE_TAG: metodil/my-hello-app:latest
-#  RUNSONIMAGE: 'ubuntu-latest'
 
 jobs:
   editorconfig:
@@ -64,12 +63,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-    - name: Run Trivy vulnerability scanner in fs mode
-      uses: aquasecurity/trivy-action@0.28.0
-      with:
-        scan-type: 'fs'
-        scan-ref: 'app/'
-        trivy-config: trivy.yaml
+      - name: Run Trivy vulnerability scanner in fs mode
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: 'fs'
+          scan-ref: 'app/'
+          trivy-config: trivy.yaml
 
   build-test-push:
     name: Build Dockerfile, test container with trivy if ok push to registry
