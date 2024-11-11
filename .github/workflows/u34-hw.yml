@@ -9,23 +9,25 @@ on:
 env:
   TEST_TAG: metodil/my-hello-app:test
   IMAGE_TAG: metodil/my-hello-app:latest
+  RUNS_ON: ubuntu-latest
 
 jobs:
   editorconfig:
-    runs-on: ubuntu-latest
+    runs-on: ${{ RUNS_ON }}
     steps:
       - uses: actions/checkout@v4
       - uses: editorconfig-checker/action-editorconfig-checker@main
       - run: editorconfig-checker
 
   markdown-link-check:
-    runs-on: ubuntu-latest
+    runs-on: ${{ RUNS_ON }}
     steps:
     - uses: actions/checkout@master
     - uses: gaurav-nelson/github-action-markdown-link-check@v1
 
   lint-unit-test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ RUNS_ON }}
+    needs: [ editorconfig, markdown-link-check ]
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -38,6 +40,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
       - name: Test with pytest
         run: |
           pip install pytest pytest-cov flake8
@@ -45,24 +48,9 @@ jobs:
           python -m unittest app_test.py
       - name: Run flake8 linting
         run: flake8 app/
-
-
-
-#  pylint-test:
-#    runs-on: ubuntu-latest
-#    steps:
-#    - uses: actions/checkout@v4
-#    - name: Set up Python ${{ matrix.python-version }}
-#      uses: actions/setup-python@v3
-#      with:
-#        python-version: ${{ matrix.python-version }}
-#    - name: Install dependencies
-#      run: |
-#        python -m pip install --upgrade pip
-#        pip install pylint
-#    - name: Analysing the code with pylint
-#      run: |
-#        pylint $(git ls-files '*.py')
+      - name: Analysing the code with pylint
+        run: |
+          pylint $(git ls-files '*.py')
 
 #  trivy-test:
 #    runs-on: ubuntu-latest
