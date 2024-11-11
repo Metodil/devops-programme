@@ -41,7 +41,8 @@ jobs:
       - name: Test with pytest
         run: |
           pip install pytest pytest-cov flake8
-          python -m unittest app/app_test.py
+          cd app
+          python -m unittest app_test.py
       - name: Run flake8 linting
         run: flake8 app/
 
