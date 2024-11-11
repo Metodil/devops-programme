@@ -10,24 +10,24 @@ on:
 env:
   TEST_TAG: metodil/my-hello-app:test
   IMAGE_TAG: metodil/my-hello-app:latest
-  RUNS_ON_IMAGE: ubuntu-latest
+  RUNSONIMAGE: 'ubuntu-latest'
 
 jobs:
   editorconfig:
-    runs-on: ${{ RUNS_ON_IMAGE }}
+    runs-on: ${{ RUNSONIMAGE }}
     steps:
       - uses: actions/checkout@v4
       - uses: editorconfig-checker/action-editorconfig-checker@main
       - run: editorconfig-checker
 
   markdown-link-check:
-    runs-on: ${{ RUNS_ON_IMAGE }}
+    runs-on: ${{ RUNSONIMAGE }}
     steps:
     - uses: actions/checkout@master
     - uses: gaurav-nelson/github-action-markdown-link-check@v1
 
   lint-unit-test:
-    runs-on: ${{ RUNS_ON_IMAGE }}
+    runs-on: ${{ RUNSONIMAGE }}
     needs: [ editorconfig, markdown-link-check ]
     steps:
       - name: Check out code
