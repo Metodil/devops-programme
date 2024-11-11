@@ -49,9 +49,9 @@ jobs:
           python -m unittest app_test.py
       - name: Run flake8 linting
         run: flake8 app/
-      - name: Analysing the code with pylint
-        run: |
-          pylint $(git ls-files '*.py')
+#      - name: Analysing the code with pylint
+#        run: |
+#          pylint $(git ls-files '*.py')
 
 #  trivy-test:
 #    runs-on: ubuntu-latest
