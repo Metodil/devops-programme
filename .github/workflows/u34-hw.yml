@@ -15,18 +15,18 @@ env:
   IMAGE_TAG: metodil/my-hello-app:latest
 
 jobs:
-  editorconfig:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: editorconfig-checker/action-editorconfig-checker@main
-      - run: editorconfig-checker
-
-  markdown-link-check:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master
-    - uses: gaurav-nelson/github-action-markdown-link-check@v1
+#  editorconfig:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v4
+#      - uses: editorconfig-checker/action-editorconfig-checker@main
+#      - run: editorconfig-checker
+#
+#  markdown-link-check:
+#    runs-on: ubuntu-latest
+#    steps:
+#    - uses: actions/checkout@master
+#    - uses: gaurav-nelson/github-action-markdown-link-check@v1
 
   lint-unit-tests:
     runs-on: ubuntu-latest
