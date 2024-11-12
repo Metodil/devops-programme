@@ -48,7 +48,7 @@ jobs:
         run: flake8 app/
       - name: Analysing the code with pylint
         run: |
-          pylint --rcfile=pylintrc $(git ls-files '*.py')
+          pylint --rcfile=.pylintrc $(git ls-files '*.py')
       - name: Test with pytest
         run: |
           cd app
