@@ -1,6 +1,8 @@
 name: u34 homework workflow
 run-name: u34 homework workflow run on ${{ github.event_name }} event
 on:
+  schedule:
+    - cron: '0 0 * * 1,4' # on Monday (1) and Thursday (4)
   pull_request:
 #    types: [opened, reopened]
 #    branches:
@@ -11,7 +13,6 @@ on:
 #      - 'requirements.txt'
 
 env:
-#  TEST_TAG: metodil/my-hello-app
   IMAGE_TAG: metodil/my-hello-app
 
 jobs:
