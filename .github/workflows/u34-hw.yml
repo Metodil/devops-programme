@@ -2,6 +2,9 @@ name: u34 homework workflow
 run-name: u34 homework workflow run on ${{ github.event_name }} event
 on:
   pull_request:
+    types: [opened, reopened]
+    branches:
+        - 'main'
 #    paths:
 #      - 'app/**'
 #      - 'Dockerfile'
@@ -47,9 +50,9 @@ jobs:
           python -m unittest app_test.py
       - name: Run flake8 linting
         run: flake8 app/
-#      - name: Analysing the code with pylint
-#        run: |
-#          pylint $(git ls-files '*.py')
+      - name: Analysing the code with pylint
+        run: |
+          pylint $(git ls-files '*.py')
 
   security-scan:
     runs-on: ubuntu-latest
@@ -61,10 +64,11 @@ jobs:
       - uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      - name: Run Trivy vulnerability scanner in fs mode
-#        uses: aquasecurity/trivy-action@0.28.0
-#        with:
-#          scan-type: 'fs'
+      - name: Run Trivy vulnerability scanner in fs mode
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
 #          scan-ref: 'app/'
 #          trivy-config: trivy.yaml
 
