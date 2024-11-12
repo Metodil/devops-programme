@@ -147,7 +147,7 @@ jobs:
 
       - name: Import Secrets from Hashi vault
         id: import-secrets
-        uses: hashicorp/vault-action@v2
+        uses: hashicorp/vault-action@v3
         with:
           url: https://vault.elcomp68.com:8200
           token: ${{ secrets.HV_U34_TOKEN }}
