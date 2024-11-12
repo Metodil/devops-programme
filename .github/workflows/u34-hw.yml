@@ -2,9 +2,9 @@ name: u34 homework workflow
 run-name: u34 homework workflow run on ${{ github.event_name }} event
 on:
   pull_request:
-    types: [opened, reopened]
-    branches:
-        - 'main'
+#    types: [opened, reopened]
+#    branches:
+#        - 'main'
 #    paths:
 #      - 'app/**'
 #      - 'Dockerfile'
