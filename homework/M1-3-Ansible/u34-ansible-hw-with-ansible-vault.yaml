@@ -27,7 +27,7 @@
       file:
         path: "{{ app_folder }}"
         state: directory
-        mode: 0755
+        mode: 0655
 
     - name: Get latest git version
       git:
