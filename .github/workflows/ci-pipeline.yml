@@ -1,5 +1,5 @@
-name: u34 homework workflow
-run-name: u34 homework workflow run on ${{ github.event_name }} event
+name: u34 ci-pipeline
+run-name: u34 ci-pipeline run on ${{ github.event_name }} event
 on:
   schedule:
     - cron: '0 0 * * 1,4' # on Monday (1) and Thursday (4)
@@ -119,6 +119,7 @@ jobs:
   build-test:
     name: Build Dockerfile, test container with trivy if ok push to registry
     runs-on: ubuntu-latest
+    if: ${{ always() && (needs.trivy-security.result == 'success' || needs.sonarcloud-security.result == 'success') }}
     needs: [ trivy-security, sonarcloud-security ]
     steps:
       - name: Checkout code
@@ -138,8 +139,9 @@ jobs:
         with:
           sarif_file: 'trivy-results.sarif'
 
-  push:
+  deploy:
     runs-on: ubuntu-latest
+    if: ${{ always() && (needs.build-test.result == 'success') }}
     needs: [ build-test ]
     steps:
       - name: Import Secrets from Hashi vault
