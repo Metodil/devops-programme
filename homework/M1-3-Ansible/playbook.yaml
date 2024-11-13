@@ -7,7 +7,7 @@
       file:
         path: "{{ folder_path }}"
         state: directory
-        mode: 0655
+        mode: 0777
     - name: Get latest git version
       git:
         repo: git@github.com:Metodil/devops-programme

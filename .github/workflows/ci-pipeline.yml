@@ -119,7 +119,8 @@ jobs:
   build-test:
     name: Build Dockerfile, test container with trivy if ok push to registry
     runs-on: ubuntu-latest
-    if: ${{ always() && (needs.trivy-security.result == 'success' || needs.sonarcloud-security.result == 'success') }}
+    if: ${{ !cancelled() && !failure() }}
+#    if: ${{ always() && (needs.trivy-security.result == 'success' || needs.sonarcloud-security.result == 'success') }}
     needs: [ trivy-security, sonarcloud-security ]
     steps:
       - name: Checkout code
@@ -141,7 +142,8 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ always() && (needs.build-test.result == 'success') }}
+    if: ${{ !cancelled() && !failure() }}
+#    if: ${{ always() && (needs.build-test.result == 'success') }}
     needs: [ build-test ]
     steps:
       - name: Import Secrets from Hashi vault
