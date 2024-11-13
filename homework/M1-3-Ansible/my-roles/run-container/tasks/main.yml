@@ -11,4 +11,3 @@
         image: "{{ image_name_r }}"
         state: started
         ports: "{{ listen_port_r }}"
-
