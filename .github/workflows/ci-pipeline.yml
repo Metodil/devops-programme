@@ -117,7 +117,8 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build-test:
-    name: Build Dockerfile, test container with trivy if ok push to registry
+    name: Build image and test
+    description: Build Dockerfile, test container with trivy if ok push to registry
     runs-on: ubuntu-latest
     if: ${{ !cancelled() && !failure() }}
 #    if: ${{ always() && (needs.trivy-security.result == 'success' || needs.sonarcloud-security.result == 'success') }}
@@ -133,14 +134,18 @@ jobs:
         with:
           image-ref: '${{ env.IMAGE_TAG }}:${{ github.sha }}'
           format: 'sarif'
-          output: 'trivy-results.sarif'
+          output: 'trivy-results-container.sarif'
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results-container.sarif'
 #        if: always()
 #        with:
 #          sarif_file: 'trivy-results.sarif'
 
   deploy:
+    name: Get credentials and push to Dockerhub
+    description: Get credentials from Hashi vault and push docker image to Dockerhub
     runs-on: ubuntu-latest
     if: ${{ !cancelled() && !failure() }}
 #    if: ${{ always() && (needs.build-test.result == 'success') }}
