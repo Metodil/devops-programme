@@ -118,7 +118,7 @@ jobs:
 
   build-test:
     name: Build image and test
-    description: Build Dockerfile, test container with trivy if ok push to registry
+#    description: Build Dockerfile, test container with trivy if ok push to registry
     runs-on: ubuntu-latest
     if: ${{ !cancelled() && !failure() }}
 #    if: ${{ always() && (needs.trivy-security.result == 'success' || needs.sonarcloud-security.result == 'success') }}
@@ -145,7 +145,7 @@ jobs:
 
   deploy:
     name: Get credentials and push to Dockerhub
-    description: Get credentials from Hashi vault and push docker image to Dockerhub
+#    description: Get credentials from Hashi vault and push docker image to Dockerhub
     runs-on: ubuntu-latest
     if: ${{ !cancelled() && !failure() }}
 #    if: ${{ always() && (needs.build-test.result == 'success') }}
