@@ -53,3 +53,27 @@ Create a GitHub Actions pipeline that runs on commit to a feature branch (i.e. n
   schedule:
     - cron: '0 0 * * 1,4' # on Monday (1) and Thursday (4)
 ```
+
+***
+
+## M1-3-1 Configuration Management
+
+### Ansible Task
+
+Create an Ansible playbook that build, push and then run the Docker image for the Python
+application. Let your playbook has the following variables:
+
+* `image_name` - contains the name of your image without the tag, i.e. `vutoff/python-app`
+* `image_tag` - contains the tag you tagged your image with, i.e. `v0.2`
+* `listen_port` - contains the listening port you're binding your app to.
+
+Make sure that you set environment variable `PORT` when you define your container
+in the Ansible playbook that takes its value from `listen_port` variable.
+
+✅&nbsp; playbook is created in homework/**M1-3-Ansible/u34-ansible-hw.yaml**,
+using **branch:** **ansible-practice-and-homework**
+
+extra playbooks in **M1-3-Ansible** :
+- u34-ansible-hw-with-ansible-vault.yaml : Secrets management with **Ansible secrets**
+- u34-ansible-hw-with-hashi-vault.yaml : Secrets management with **Hashi vault**
+- u34-ansible-hw-with-role-hashi-vault.yaml : Using **roles** in Ansible
