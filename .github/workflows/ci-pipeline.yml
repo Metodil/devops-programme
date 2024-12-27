@@ -1,8 +1,8 @@
 name: u34 ci-pipeline
 run-name: u34 ci-pipeline run on ${{ github.event_name }} event
 on:
-  schedule:
-    - cron: '0 0 * * 1,4' # on Monday (1) and Thursday (4)
+#  schedule:
+#    - cron: '0 0 * * 1,4' # on Monday (1) and Thursday (4)
   pull_request:
 #    types: [opened, reopened]
 #    branches:
