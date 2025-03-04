@@ -7,10 +7,10 @@ metadata:
   name: con-web
 spec:
   ports:
-    - name: "8080"
-      port: 8080
+    - name: "9080"
+      port: 9080
       targetPort: 5000
   selector:
     app: FunFacts
     role: web
-  type: LoadBalancer
+  type: NodePort
