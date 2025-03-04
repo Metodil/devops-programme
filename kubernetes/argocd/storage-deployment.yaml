@@ -6,7 +6,7 @@ metadata:
     role: storage
   name: storage
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: FunFacts
